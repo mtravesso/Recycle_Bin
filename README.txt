@@ -1,2 +1,0 @@
-Martim Dias
-Nuno Costa

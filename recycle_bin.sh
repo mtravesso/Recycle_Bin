@@ -771,6 +771,12 @@ EOF
     return 0
 }
 
+#################################################
+# Function: show_statistics
+# Description: Shows stats about the recycle bin
+# Parameters: None
+# Returns: 0
+#################################################
 show_statistics() {
     #Checks if metadata file is corrupted, if so, recreate it
     if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
