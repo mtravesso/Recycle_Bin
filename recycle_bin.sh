@@ -213,18 +213,11 @@ delete_file() {
 # Returns: 0 on success
 #################################################
 list_recycled() {
-
+    local error_status=0
     # Validate metadata header and bail out early if invalid
     local expected_header="ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"
-    if [ ! -f "$METADATA_FILE" ]; then
+    if [ ! -f "$METADATA_FILE" ] || ! head -n 2 "$METADATA_FILE" 2>/dev/null | grep -qF "$expected_header"; then
         echo "Metadata file missing: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "$expected_header" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
-    fi
-    if ! head -n 2 "$METADATA_FILE" 2>/dev/null | grep -qF "$expected_header"; then
-        echo "Metadata file missing or corrupted: $METADATA_FILE"
         echo "# Recycle Bin Metadata" > "$METADATA_FILE"
         echo "$expected_header" >> "$METADATA_FILE"
         echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
