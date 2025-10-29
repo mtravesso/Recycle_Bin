@@ -924,13 +924,14 @@ check_quota() {
     if [ -d "$FILES_DIR" ]; then
         current_size=$(du -sb "$FILES_DIR" 2>/dev/null | awk '{print $1}')
         [ -z "$current_size" ] && current_size=0
+        echo "Current recycle bin size: $current_size bytes (Max: $MAX_SIZE_BYTES bytes)"
     else
         current_size=0
     fi
 
     if [ "$current_size" -gt "$MAX_SIZE_BYTES" ]; then
         echo "Warning: Recycle bin quota exceeded ($current_size bytes > $MAX_SIZE_BYTES bytes) (MAX_SIZE_MB=$MAX_SIZE_MB)"
-        auto_cleanup
+        auto_cleanup #Fazer Esta Merda
     fi
 }
 
@@ -1069,6 +1070,9 @@ main() {
         preview)
             shift
             preview_file "$@"
+            ;;
+        quota)
+            check_quota
             ;;
         *)
             echo "Invalid option. Use 'help' for usage information."
