@@ -221,7 +221,7 @@ list_recycled() {
         echo "# Recycle Bin Metadata" > "$METADATA_FILE"
         echo "$expected_header" >> "$METADATA_FILE"
         echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
+        return 1    
     fi
 
     echo "=== Recycle Bin Content ==="
@@ -530,7 +530,7 @@ restore_file() {
 #################################################
 empty_recyclebin() {
 
-    #Checks if metadata file is corrupted, if so, recreate it
+    # Checks if metadata file is corrupted, if so, recreate it
     if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
         echo "Metadata file missing or corrupted: $METADATA_FILE"
         echo "# Recycle Bin Metadata" > "$METADATA_FILE"
@@ -539,21 +539,28 @@ empty_recyclebin() {
         return 1
     fi
 
-    # Use AUTO_CONFIRM env var (expected values: "true" or "false")
     local auto_confirm="${AUTO_CONFIRM:-false}"
-
-    # If stdin is not a terminal, assume non-interactive; allow auto confirm
     local noninteractive=false
     if [ ! -t 0 ]; then
         noninteractive=true
     fi
 
-    # if there are not arguments empty the entire recycle bin
+    # Check for --force flag
+    local force=false
+    for arg in "$@"; do
+        if [ "$arg" = "--force" ]; then
+            force=true
+            shift # remove the flag from positional parameters
+            break
+        fi
+    done
+
+    # If there are no arguments (after removing --force), empty the entire recycle bin
     if [ "$#" -eq 0 ]; then
         echo "Delete all items in recycle bin permanently?"
 
-        #Auto Confirm so the Test can run without user interaction, if ran manually it will ask for confirmation
-        if [ "$auto_confirm" = true ]; then
+        # Skip confirmation if forced or auto-confirmed
+        if [ "$force" = true ] || [ "$auto_confirm" = true ]; then
             confirm="y"
         else
             read -rp "(y/n): " confirm
@@ -561,18 +568,13 @@ empty_recyclebin() {
 
         case "$confirm" in
             [Yy]*)
-                #Shows the List of files being deleted
                 echo "Deleting all files..."
                 echo "List of files being deleted:"
                 list_recycled
-
-                # Get count and size before deletion
                 count=$(find "$FILES_DIR" -type f | wc -l)
                 size=$(du -ch "$FILES_DIR" | tail -n 1 | awk '{print $1}')
-                # Deletion of all files and directories inside the files directory
                 rm -rf "$FILES_DIR"/*
                 echo "Recycle Bin emptied ($count files, total size $size)."
-                # Reset metadata file
                 echo "# Recycle Bin Metadata" > "$METADATA_FILE"
                 echo "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER" >> "$METADATA_FILE"
                 ;;
@@ -584,27 +586,28 @@ empty_recyclebin() {
                 ;;
         esac
 
-    # If arguments are given delete only specified items
+    # If arguments are given, delete only specified items
     else
         echo "Delete specified items permanently?"
-        read -rp "(y/n): " confirm
+
+        # Skip confirmation if forced
+        if [ "$force" = true ]; then
+            confirm="y"
+        else
+            read -rp "(y/n): " confirm
+        fi
+
         case "$confirm" in
             [Yy]*)
                 for key in "$@"; do
-                    # Try to find by ID first
                     match=$(grep "^$key," "$METADATA_FILE")
-                    
-                    # If not found, try searching by OriginalName
                     if [ -z "$match" ]; then
                         match=$(awk -F',' -v name="$key" '$2==name {print $0}' "$METADATA_FILE")
                     fi
-
                     if [ -z "$match" ]; then
                         echo "No metadata found for ID or name: $key"
                         continue
                     fi
-
-                    # Extract ID and type
                     id=$(echo "$match" | cut -d',' -f1)
                     type=$(echo "$match" | cut -d',' -f6)
                     file_path="$FILES_DIR/$id.$type"
@@ -616,7 +619,6 @@ empty_recyclebin() {
                         echo "File not found in recycle bin: $file_path"
                     fi
 
-                    # Remove the metadata line
                     grep -v "^$id," "$METADATA_FILE" > "$METADATA_FILE.tmp"
                     mv "$METADATA_FILE.tmp" "$METADATA_FILE"
                 done
@@ -633,6 +635,7 @@ empty_recyclebin() {
 
     return 0
 }
+
 
 
 
@@ -749,27 +752,76 @@ search_recycled() {
 # Returns: 0
 #################################################
 display_help() {
-    cat << EOF
-Linux Recycle Bin - Usage Guide
-
-SYNOPSIS:
-    $0 [OPTION] [ARGUMENTS]
-OPTIONS:
-    delete <file> Move file/directory to recycle bin
-    list List all items in recycle bin
-    restore <id> Restore file by ID
-    search <pattern> Search for files by name
-    empty Empty recycle bin permanently
-    help Display this help message
-EXAMPLES:
-    $0 delete myfile.txt
-    $0 list
-    $0 restore 1696234567_abc123
-    $0 search "*.pdf"
-    $0 empty
-EOF
-    return 0
+    echo "==============================================="
+    echo "               Linux Recycle Bin"
+    echo "==============================================="
+    echo
+    echo "Usage:"
+    echo "  $0 <command> [options]"
+    echo
+    echo "-----------------------------------------------"
+    echo "Available Commands:"
+    echo "-----------------------------------------------"
+    echo "  delete <file|directory>"
+    echo "      Moves the specified file or directory to the recycle bin."
+    echo "      The original path and metadata are stored for future restoration."
+    echo
+    echo "  list"
+    echo "      Displays all items currently stored in the recycle bin."
+    echo "      Shows ID, original name, deletion date, size, permissions, and owner."
+    echo
+    echo "  restore <name|id> [target_path]"
+    echo "      Restores a deleted file or directory."
+    echo "      If the original path no longer exists, you may specify an alternative target path."
+    echo
+    echo "  empty [name|id|all]"
+    echo "      Permanently deletes one item (by name or ID) or clears the entire recycle bin."
+    echo "      This action cannot be undone."
+    echo
+    echo "  search <pattern>"
+    echo "      Searches items in the recycle bin by name, original path, or file type."
+    echo
+    echo "  search date <start> <end>"
+    echo "      Searches files deleted within the specified date range."
+    echo "      Example format: 'YYYY-MM-DD HH:MM:SS'"
+    echo
+    echo "  stats"
+    echo "      Displays usage statistics including total files, total size, and oldest/newest deletions."
+    echo
+    echo "  cleanup"
+    echo "      Automatically removes items older than a configured retention period."
+    echo "      Useful for keeping the recycle bin size manageable."
+    echo
+    echo "  quota"
+    echo "      Checks the current recycle bin size against the configured maximum limit."
+    echo "      Displays warnings if the quota is exceeded."
+    echo
+    echo "  preview <name|id>"
+    echo "      Displays the first few lines of a text file stored in the recycle bin."
+    echo "      Helpful for identifying files before restoring them."
+    echo
+    echo "  help"
+    echo "      Displays this help message."
+    echo
+    echo "-----------------------------------------------"
+    echo "Examples:"
+    echo "-----------------------------------------------"
+    echo "  $0 delete file.txt"
+    echo "  $0 restore file.txt"
+    echo "  $0 empty all"
+    echo "  $0 search date '2025-10-01 00:00:00' '2025-10-10 23:59:59'"
+    echo "  $0 quota"
+    echo "  $0 stats"
+    echo
+    echo "-----------------------------------------------"
+    echo "Notes:"
+    echo "-----------------------------------------------"
+    echo "  - Deleted files are stored in a hidden recycle bin folder in your home directory."
+    echo "  - Metadata (such as name, path, size, and owner) is logged for each deleted item."
+    echo "  - Restored files will be placed in their original location, if the path no longer exists the folders will be recreated to match the original path."
+    echo
 }
+
 
 #################################################
 # Function: show_statistics
@@ -833,12 +885,12 @@ show_statistics() {
 }
 
 
-# -----------------------------------------------
+#################################################
 # Function: auto_cleanup
 # Description: Automatically deletes files from the recycle bin that have been there for more than 30 days.
 # Arguments: None
 # Returns: 0 if recycle bin is empty; otherwise performs deletions.
-# -----------------------------------------------
+#################################################
 auto_cleanup() {
 
     # Read RETENTION_DAYS from config (fallback 30)
@@ -896,12 +948,12 @@ auto_cleanup() {
 }
 
 
-# -----------------------------------------------
+#################################################
 # Function: check_quota
 # Description: Checks if the total size of files in the recycle bin exceeds the defined maximum size (1 GB). Triggers auto_cleanup() if exceeded.
 # Arguments: None
 # Returns: Displays a warning if the quota is exceeded.
-# -----------------------------------------------
+#################################################
 check_quota() {
     # Default fallback
     local DEFAULT_MAX_MB=2048
@@ -924,24 +976,23 @@ check_quota() {
     if [ -d "$FILES_DIR" ]; then
         current_size=$(du -sb "$FILES_DIR" 2>/dev/null | awk '{print $1}')
         [ -z "$current_size" ] && current_size=0
-        echo "Current recycle bin size: $current_size bytes (Max: $MAX_SIZE_BYTES bytes)"
     else
         current_size=0
     fi
 
     if [ "$current_size" -gt "$MAX_SIZE_BYTES" ]; then
         echo "Warning: Recycle bin quota exceeded ($current_size bytes > $MAX_SIZE_BYTES bytes) (MAX_SIZE_MB=$MAX_SIZE_MB)"
-        auto_cleanup #Fazer Esta Merda
+        auto_cleanup
     fi
 }
 
-# -----------------------------------------------
+#################################################
 # Function: preview_file
 # Description: Displays the first 10 lines of a text file or shows file type information if it is a binary file.
 # Arguments: 
 #   $1 - File ID (identifier of the file to preview)
 # Returns: Displays preview or file type info on screen.
-# -----------------------------------------------
+#################################################
 preview_file() {
     local input="$1"
     local metadata recycle_path id name original_path type display_label mime
