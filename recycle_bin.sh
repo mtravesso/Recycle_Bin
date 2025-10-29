@@ -1007,10 +1007,10 @@ preview_file() {
 
     # Ensure metadata file exists
     if [ -f "$METADATA_FILE" ]; then
-        # try exact ID match using awk (safe, no regex)
+        # try exact ID match using awk
         metadata=$(awk -F',' -v id="$input" '$1==id {print; exit}' "$METADATA_FILE" 2>/dev/null || true)
 
-        # if not found by ID, try filename (case-insensitive)
+        # if not found by ID, try filename
         if [ -z "$metadata" ]; then
             metadata=$(awk -F',' -v nm="$(printf '%s' "$input" | tr '[:upper:]' '[:lower:]')" 'tolower($2)==nm {print; exit}' "$METADATA_FILE" 2>/dev/null || true)
         fi
@@ -1022,7 +1022,7 @@ preview_file() {
         type=$(printf '%s' "$type" | tr -d '[:space:]')
         display_label="${input}"
 
-        # locate stored item: dirs or files (accept id without extension)
+        # locate stored item: dirs or files
         if [ "$type" = "DIR" ]; then
             if [ -d "$FILES_DIR/$id" ]; then
                 recycle_path="$FILES_DIR/$id"
@@ -1044,7 +1044,7 @@ preview_file() {
             return 1
         fi
     else
-        # fallback: search by filename in files tree (case-insensitive)
+        # fallback: search by filename in files tree
         recycle_path=$(find "$FILES_DIR" -iname "$input" -print -quit 2>/dev/null || true)
         if [ -z "$recycle_path" ]; then
             echo -e "${RED}Error: No item found by ID or name '$input'${NC}"

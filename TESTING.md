@@ -14,7 +14,7 @@
 **Actual Result:** File is moved to ~/.recycle_bin/files
 **Status:** Pass
 **Screenshots:** 
-To be added
+![alt text](ScreenShots/delete_single_file.png)
 
 ### Test Case 2: Delete Multiple Files
 **Objective:** Verify that multiple files can be deleted successfully
@@ -33,7 +33,7 @@ To be added
 **Actual Result:** Files are moved to ~/.recycle_bin/files
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/delete_multiple_files.png)
 
 ### Test Case 3: Delete an empty Directory
 **Objective:** Verify that an empty Directory can be deleted successfully
@@ -51,7 +51,7 @@ To be added
 **Actual Result:** Directory is moved to ~/.recycle_bin/files
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/delete_empty_directory.png)
 
 ### Test Case 4: Delete Directory with Files and Subdirectories
 **Objective:** Verify that a directory containing files and subdirectories can be deleted successfully
@@ -68,9 +68,10 @@ To be added
 - Success message is displayed
 - Directory appears in list output
 **Actual Result** Directory and containing files/subdirectories are moved to ~/.recycle_bin/files
+An error message is Displayed but the deleting process works anyways
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/delete_dir_multiple.png)
 
 ### Test Case 5: List Files in Recycle Bin
 **Objective:** Verify that deleted files/directories appear in the recycle bin list
@@ -82,7 +83,7 @@ To be added
 **Actual Result** All files/directories/both are listed
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/delete_multiple_files.png)
 
 ### Test Case 6: List Files in Recycle Bin sorted by date/size
 **Objective:** Verify that deleted files/directories appear in the recycle bin list sorted by either size or date 
@@ -94,7 +95,7 @@ To be added
 **Actual Result** All files/directories/both are listed in the specified order (date/size)
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/list_date_size.png)
 
 ### Test Case 7: List Files in Recycle Bin in detailed mode
 **Objective:** Verify that deleted files/directories appear in the recycle bin list in detailed mode 
@@ -106,7 +107,7 @@ To be added
 **Actual Result** All files/directories/both are listed in detailed mode
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/list_detailed.png)
 
 ### Test Case 8: List Files in Recycle Bin in detailed mode and sorted by date/size
 **Objective:** Verify that deleted files/directories appear in the recycle bin list in detailed mode and also sorted by name/size
@@ -118,9 +119,9 @@ To be added
 **Actual Result** All files/directories/both are listed in detailed mode and in the specified order (date/size)
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/list_detailed_date_size.png)
 
-### NOTE: In Tests 5 and 7 the items are by default sorted by name, it can be specified in tests 6 and 8 that the list is supposed to be sorted by name but it is redundant to do so
+**NOTE:** In Tests 5 and 7 the items are by default sorted by name, it can be specified in tests 6 and 8 that the list is supposed to be sorted by name but it is redundant to do so
 
 ### Test Case 9: Restore a file by id
 **Objective:** Verify that a file that has previously been deleted is now restored to its original path
@@ -133,7 +134,8 @@ To be added
 **Actual Result** Specified file is restored to its original path, keeping timestamps and permissions
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_file.png)
+
 
 ### Test Case 10: Restore a file by name
 **Objective:** Verify that a file that has previously been deleted is now restored to its original path
@@ -146,7 +148,7 @@ To be added
 **Actual Result** Specified file is restored to its original path, keeping timestamps and permissions
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_file_name.png)
 
 ### Test Case 11: Restore a Directory by id
 **Objective:** Verify that a Directory that has previously been deleted is now restored to its original path
@@ -159,7 +161,7 @@ To be added
 **Actual Result** Specified directory is restored to its original path
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_dir.png)
 
 ### Test Case 12: Restore a Directory by name
 **Objective:** Verify that a Directory that has previously been deleted is now restored to its original path
@@ -172,7 +174,7 @@ To be added
 **Actual Result** Specified direcotry is restored to its original path
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_dir_name.png)
 
 
 ### Test Case 13: Restore a file when original directories are missing
@@ -187,7 +189,7 @@ To be added
 **Actual Result** Specified file is restored to its original path, keeping timestamps and permissions
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_file_missing_dir.png)
 
 ### Test Case 14: Restore a file when there is a file with the same name in the original path (Overwrite)
 **Objective:** Verify that a file that has previously been deleted and is being restored to a path where there already exists a file with the same name is correctly overwrites the file with the same name
@@ -202,7 +204,7 @@ To be added
 **Actual Result** Specified file is restored to its original path, keeping timestamps and permissions and overwriting the file with the same name
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_overwrite.png)
 
 ### Test Case 15: Restore a file when there is a file with the same name in the original path (Resotre With Modified Name)
 **Objective:** Verify that a file that has previously been deleted and is being restored to a path where there already exists a file with the same name is correctly restored with a modified name (original name + _ + id + .type)
@@ -217,7 +219,7 @@ To be added
 **Actual Result** Specified file is restored to its original path, keeping timestamps and permissions and changing its name to not cause conflict with the pre-existing file
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_rewrite.png)
 
 ### Test Case 16: Restore a file when there is a file with the same name in the original path (Cancel)
 **Objective:** Verify that a file that has previously been deleted and is being restored to a path where there already exists a file with the same name is correctly restored with a modified name (original name + _ + id + .type)
@@ -232,7 +234,7 @@ To be added
 **Actual Result** Specified file is not restored
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_cancel.png)
 
 ### Test Case 17: Restore a directory with a directory with the same name in the original path
 **Objective:** Verify that a directory that has previously been deleted and is being restored to a path where there already exists a directory with the same name is correctly restored
@@ -246,7 +248,7 @@ To be added
 **Actual Result** Specified directory is "Merged" with the pre-existing one
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/restore_dir_preExisting.png)
 
 ### Test Case 18: Empty Recycle bin with confirmation
 **Objective:** Verify recycle bin has been completely emptied
@@ -350,3 +352,38 @@ To be added
 **Screenshots:**
 To be added
 
+### Test Case 25: Activate Auto-cleanup and empty recycle-bin
+**Objective:** Verify that Help information is displayed on the screen
+**Steps**
+1. To do This step it is first necessary to do any of the previous tests (1-4)
+2. For the purpose of testing the user should chnage the the config.cfg file 3rd line RETENTION_DAYS=30 to RETENTION_DAYS=0
+3. Run `./recycle_bin.sh help` (this also works with other functions becuase autocleanup is executed every time the program executes)
+**Expected Result**
+- Auto-cleanup is trigered and the recycle bin is emptied
+**Actual Result** Auto-cleanup is trigered and the recycle bin is emptied
+**Status:** Pass
+**Screenshots:**
+To be added
+**Note:** When in normal usage (RETENTION_DAYS>=0) the auto-cleanup function will delete only the files older than the retention days, not empty the whole recycle bin, unless all the files are older than the retention days
+
+### Test Case 26: Shows Statistics
+**Objective:** Verify that Show_Statiscs() function is working as intended
+**Steps**
+1. Run `./recycle_bin.sh stats`
+**Expected Result**
+- The statistics are displayed on the screen
+**Actual Result** The statistics are displayed on the screen
+**Status:** Pass
+**Screenshots:**
+To be added
+
+### Test Case 27: Preview File
+**Objective:** Preview a File
+**Steps**
+1. Run `./recycle_bin.sh preview name` name = the name of the file before deletion 
+**Expected Result**
+- The first lines of text of the file a showed on the temrinal
+**Actual Result** The first lines of text of the file a showed on the temrinal
+**Status:** Pass
+**Screenshots:**
+To be added
