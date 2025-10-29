@@ -78,8 +78,16 @@ Default settings are hardcoded in the script:
 
 
 ## Known Issues
-File metadata (like deletion date) is limited; no versioning or backup history.
+File metadata (like deletion date) is limited; 
+No versioning or backup history.
+If the metadata file grows too large, search and sorting operations may slow down significantly.
 
 
 ## References
-files that the Professor made available on elearning
+Files that the Professor made available on elearning
+Videos from youtube:
+    -https://www.youtube.com/watch?v=2733cRPudvI&list=PLT98CRl2KxKGj-VKtApD8-zCqSaN2mD4w (and others from the same youtube channel)
+    -https://man7.org/linux/man-pages/man1/du.1.html?utm_source=chatgpt.com
+    -https://www.geeksforgeeks.org/du-command-in-linux-with-examples/
+    -https://www.geeksforgeeks.org/linux-unix/stat-command-in-linux-with-examples/
+
