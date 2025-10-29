@@ -59,22 +59,22 @@ Default settings are hardcoded in the script:
 
 ## Examples
 ./recycle_bin.sh delete doc2.txt
-![alt text](image-3.png)
+![alt text](delete.png)
 
 ./recycle_bin.sh list
-![alt text](image.png)
+![alt text](list_view.png)
 
 ./recycle_bin.sh search doc
-![alt text](image-1.png)
+![alt text](search.png)
 
 ./recycle_bin.sh preview doc2.txt
-![alt text](image-2.png)
+![alt text](preview.png)
 
 ./recycle_bin.sh restore doc2.txt
-![alt text](image-4.png)
+![alt text](restore.png)
 
 ./recycle_bin.sh stats
-![alt text](image-5.png)
+![alt text](/home/martim/Secretária/SO/Recycle_BInn/ScreenShots/stats.png)
 
 
 ## Known Issues
