@@ -8,7 +8,7 @@ Martim Dias
 125925
 
 ## Description
-his project implements a Recycle Bin system in Linux using Bash scripting.  
+This project implements a Recycle Bin system in Linux using Bash scripting.  
 It simulates a modern trash/recycle system, allowing users to safely delete files, restore them, view the recycle bin contents, generate statistics, and automatically clean old files according to configurable policies.
 
 
@@ -90,4 +90,5 @@ Videos from youtube:
     -https://man7.org/linux/man-pages/man1/du.1.html?utm_source=chatgpt.com
     -https://www.geeksforgeeks.org/du-command-in-linux-with-examples/
     -https://www.geeksforgeeks.org/linux-unix/stat-command-in-linux-with-examples/
+    -https://labex.io/linuxjourney
 

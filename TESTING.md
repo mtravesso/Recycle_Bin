@@ -315,7 +315,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 21: Search for a file/directory by its original type
+### Test Case 22: Search for a file/directory by its original type
 **Objective:** Verify that the search function displays all the files/directories of the searched type on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -327,7 +327,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 22: Search for a file/directory by its date range
+### Test Case 23: Search for a file/directory by its date range
 **Objective:** Verify that the search function displays all the files/directories of the searched date range on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -335,6 +335,17 @@ To be added
 **Expected Result**
 - Files/Directories, inside the date range, information are displayed on screen
 **Actual Result** Files/Directories, inside the date range, information are displayed on screen
+**Status:** Pass
+**Screenshots:**
+To be added
+
+### Test Case 24: Display Help information
+**Objective:** Verify that Help information is displayed on the screen
+**Steps**
+1. Run `./recycle_bin.sh help` or `./recycle_bin.sh --help` or `./recycle_bin.sh -h`
+**Expected Result**
+- Help information is displayed on screen
+**Actual Result** Help information is displayed on screen
 **Status:** Pass
 **Screenshots:**
 To be added
