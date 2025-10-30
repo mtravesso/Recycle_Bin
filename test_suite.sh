@@ -17,6 +17,7 @@ NC='\033[0m'
 # Helper Functions
 setup() {
     mkdir -p "$TEST_DIR"
+    rm -rf ~/.recycle_bin
 }
 teardown() {
     rm -rf "$TEST_DIR"
@@ -120,7 +121,7 @@ test_restore_file() {
     setup
     echo "restore" > "$TEST_DIR/restore1.txt"
     $SCRIPT delete "$TEST_DIR/restore1.txt"
-    ID=$($SCRIPT list | grep "restore1.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "restore1.txt" | awk '{print $1}')
     $SCRIPT restore "$ID"
     assert_success "Restore file"
     [ -f "$TEST_DIR/restore1.txt" ] && echo "✓ File restored"
@@ -130,7 +131,7 @@ test_restore_nonexistent_path() {
     echo "=== Test: Restore to Non-existent Path ==="
     echo "restore" > "$TEST_DIR/fileX.txt"
     $SCRIPT delete "$TEST_DIR/fileX.txt"
-    ID=$($SCRIPT list | grep "fileX.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "fileX.txt" | awk '{print $1}')
     rm -r "$TEST_DIR" # remove the original folder
     $SCRIPT restore "$ID" > restore_output.log 2>&1
 
@@ -173,7 +174,7 @@ test_search_nonexistent_file() {
 
 test_display_help() {
     echo "=== Test: Display Help ==="
-    $SCRIPT help | grep -q "Usage Guide"
+    $SCRIPT help | grep -q "Usage:"
     assert_success "Display help information"
 }
 
@@ -191,7 +192,7 @@ test_preview_file() {
     setup
     echo "preview content line1" > "$TEST_DIR/preview.txt"
     $SCRIPT delete "$TEST_DIR/preview.txt"
-    ID=$($SCRIPT list | grep "preview.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "preview.txt" | awk '{print $1}')
     # preview by ID
     $SCRIPT preview $ID | grep -q "preview content line1"
     assert_success "Preview file content by ID"
@@ -234,7 +235,7 @@ test_restore_existing_filename() {
     echo "orig" > "$TEST_DIR/conflict.txt"
     $SCRIPT delete "$TEST_DIR/conflict.txt"
     echo "new" > "$TEST_DIR/conflict.txt"
-    ID=$($SCRIPT list | grep "conflict.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "conflict.txt" | awk '{print $1}')
     echo "O" | $SCRIPT restore "$ID"
     assert_success "Restore with existing filename (overwrite)"
 }
@@ -250,7 +251,7 @@ test_handle_spaces_special_chars() {
     setup
     echo "data" > "$TEST_DIR/file with spaces !@#.txt"
     $SCRIPT delete "$TEST_DIR/file with spaces !@#.txt"
-    ID=$($SCRIPT list | grep "file with spaces" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "file with spaces" | awk '{print $1}')
     $SCRIPT restore "$ID"
     assert_success "File with spaces and special characters restored"
 }
@@ -269,7 +270,7 @@ test_large_file() {
     setup
     create_large_file "$TEST_DIR/largefile.bin" 101
     $SCRIPT delete "$TEST_DIR/largefile.bin"
-    ID=$($SCRIPT list | grep "largefile.bin" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "largefile.bin" | awk '{print $1}')
     $SCRIPT restore "$ID"
     assert_success "Large file restored"
 }
@@ -280,7 +281,7 @@ test_symlink() {
     echo "target" > "$TEST_DIR/target.txt"
     ln -s "$TEST_DIR/target.txt" "$TEST_DIR/symlink.txt"
     $SCRIPT delete "$TEST_DIR/symlink.txt"
-    ID=$($SCRIPT list | grep "symlink.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "symlink.txt" | awk '{print $1}')
     $SCRIPT restore "$ID"
     assert_success "Symbolic link restored"
 }
@@ -290,7 +291,7 @@ test_hidden_file() {
     setup
     echo "secret" > "$TEST_DIR/.hiddenfile"
     $SCRIPT delete "$TEST_DIR/.hiddenfile"
-    ID=$($SCRIPT list | grep ".hiddenfile" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep ".hiddenfile" | awk '{print $1}')
     $SCRIPT restore "$ID"
     assert_success "Hidden file restored"
 }
@@ -337,7 +338,7 @@ test_permission_denied() {
     chmod 555 "$TEST_DIR/readonly_dir"
     echo "data" > "$TEST_DIR/readonly_dir/file.txt"
     $SCRIPT delete "$TEST_DIR/readonly_dir/file.txt"
-    ID=$($SCRIPT list | grep "file.txt" | awk '{print $1}')
+    ID=$($SCRIPT list --detailed | grep "file.txt" | awk '{print $1}')
     $SCRIPT restore "$ID" &>/dev/null
     assert_fail "Restore into read-only directory"
     chmod 755 "$TEST_DIR/readonly_dir"
