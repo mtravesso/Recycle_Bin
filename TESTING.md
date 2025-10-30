@@ -389,7 +389,7 @@ An error message is Displayed but the deleting process works anyways
 **Actual Result** The statistics are displayed on the screen
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/stats.png)
 
 ### Test Case 29: Preview File
 **Objective:** Preview a File
@@ -400,4 +400,4 @@ To be added
 **Actual Result** The first lines of text of the file a showed on the temrinal
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/preview.png)
