@@ -90,5 +90,5 @@ Videos from youtube:
     -https://man7.org/linux/man-pages/man1/du.1.html?utm_source=chatgpt.com
     -https://www.geeksforgeeks.org/du-command-in-linux-with-examples/
     -https://www.geeksforgeeks.org/linux-unix/stat-command-in-linux-with-examples/
-    -https://labex.io/linuxjourney
-
+    -https://labex.io/linuxjourne
+    

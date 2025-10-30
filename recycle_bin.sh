@@ -283,13 +283,15 @@ list_recycled() {
         return 0
     fi
 
-    printf "%-20s %-20s %-25s %-10s %-s\n" \
+    printf "%-15s %-20s %-25s %-10s %-s\n" \
         "ID" "NAME" "DELETION_DATE" "SIZE"
     printf "%0.s-" {1..75}; echo
 
     tail -n +3 "$METADATA_FILE" | sort $sort_opts | while IFS=',' read -r id name path date size type perms owner; do
-        printf "%-20s %-20s %-25s %-10s %-s\n" \
-            "$id" "$name" "$date" "$size"
+        local short_id="${id:0:10}"
+        local short_name="${name:0:20}"
+        printf "%-15s %-20s %-25s %-10s %-s\n" \
+            "$short_id" "$short_name" "$date" "$size"
     done
 
     echo
@@ -610,8 +612,13 @@ empty_recyclebin() {
                     fi
                     id=$(echo "$match" | cut -d',' -f1)
                     type=$(echo "$match" | cut -d',' -f6)
-                    file_path="$FILES_DIR/$id.$type"
 
+                    if [[ "$type" == "DIR" ]]; then
+                        file_path="$FILES_DIR/$id"
+                    else
+                        file_path="$FILES_DIR/$id.$type"
+                    fi
+                    
                     if [ -e "$file_path" ]; then
                         echo "Deleting $file_path permanently..."
                         rm -rf "$file_path"
