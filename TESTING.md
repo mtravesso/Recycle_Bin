@@ -303,7 +303,7 @@ An error message is Displayed but the deleting process works anyways
 **Actual Result** File/Directory is permanently deleted
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/perma_delete_confirm_name.png)
 
 ### Test Case 22: Permenantly delete a file/directory in the recycle bin without confirmation
 **Objective:** Verify that a file/directory has been permanently deleted

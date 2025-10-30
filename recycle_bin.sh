@@ -182,10 +182,6 @@ delete_file() {
             continue
         fi
 
-        
-
-
-
         # Handle file
         if [ -f "$file" ]; then
             echo "$id,$name,$path,$delete_date,$size,$type,$permissions,$owner" >> "$METADATA_FILE"
@@ -814,10 +810,10 @@ display_help() {
     echo "Examples:"
     echo "-----------------------------------------------"
     echo "  $0 delete file.txt"
+    echo "  $0 list --detailed --sort date"
     echo "  $0 restore file.txt"
-    echo "  $0 empty all"
+    echo "  $0 empty --force"
     echo "  $0 search date '2025-10-01 00:00:00' '2025-10-10 23:59:59'"
-    echo "  $0 quota"
     echo "  $0 stats"
     echo
     echo "-----------------------------------------------"
@@ -1128,9 +1124,6 @@ main() {
         preview)
             shift
             preview_file "$@"
-            ;;
-        quota)
-            check_quota
             ;;
         *)
             echo "Invalid option. Use 'help' for usage information."
