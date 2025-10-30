@@ -85,10 +85,10 @@ If the metadata file grows too large, search and sorting operations may slow dow
 
 ## References
 Files that the Professor made available on elearning
-Videos from youtube:
+Videos from youtube and some sites:
     -https://www.youtube.com/watch?v=2733cRPudvI&list=PLT98CRl2KxKGj-VKtApD8-zCqSaN2mD4w (and others from the same youtube channel)
-    -https://man7.org/linux/man-pages/man1/du.1.html?utm_source=chatgpt.com
     -https://www.geeksforgeeks.org/du-command-in-linux-with-examples/
     -https://www.geeksforgeeks.org/linux-unix/stat-command-in-linux-with-examples/
     -https://labex.io/linuxjourney
+    -https://chatgpt.com/ (Used to learn and review snippets of code)
 
