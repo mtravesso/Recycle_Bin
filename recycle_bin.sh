@@ -182,10 +182,6 @@ delete_file() {
             continue
         fi
 
-        
-
-
-
         # Handle file
         if [ -f "$file" ]; then
             echo "$id,$name,$path,$delete_date,$size,$type,$permissions,$owner" >> "$METADATA_FILE"
@@ -283,13 +279,15 @@ list_recycled() {
         return 0
     fi
 
-    printf "%-20s %-20s %-25s %-10s %-s\n" \
+    printf "%-15s %-20s %-25s %-10s %-s\n" \
         "ID" "NAME" "DELETION_DATE" "SIZE"
     printf "%0.s-" {1..75}; echo
 
     tail -n +3 "$METADATA_FILE" | sort $sort_opts | while IFS=',' read -r id name path date size type perms owner; do
-        printf "%-20s %-20s %-25s %-10s %-s\n" \
-            "$id" "$name" "$date" "$size"
+        local short_id="${id:0:10}"
+        local short_name="${name:0:20}"
+        printf "%-15s %-20s %-25s %-10s %-s\n" \
+            "$short_id" "$short_name" "$date" "$size"
     done
 
     echo
@@ -610,8 +608,13 @@ empty_recyclebin() {
                     fi
                     id=$(echo "$match" | cut -d',' -f1)
                     type=$(echo "$match" | cut -d',' -f6)
-                    file_path="$FILES_DIR/$id.$type"
 
+                    if [[ "$type" == "DIR" ]]; then
+                        file_path="$FILES_DIR/$id"
+                    else
+                        file_path="$FILES_DIR/$id.$type"
+                    fi
+                    
                     if [ -e "$file_path" ]; then
                         echo "Deleting $file_path permanently..."
                         rm -rf "$file_path"
@@ -807,10 +810,10 @@ display_help() {
     echo "Examples:"
     echo "-----------------------------------------------"
     echo "  $0 delete file.txt"
+    echo "  $0 list --detailed --sort date"
     echo "  $0 restore file.txt"
-    echo "  $0 empty all"
+    echo "  $0 empty --force"
     echo "  $0 search date '2025-10-01 00:00:00' '2025-10-10 23:59:59'"
-    echo "  $0 quota"
     echo "  $0 stats"
     echo
     echo "-----------------------------------------------"
@@ -1121,9 +1124,6 @@ main() {
         preview)
             shift
             preview_file "$@"
-            ;;
-        quota)
-            check_quota
             ;;
         *)
             echo "Invalid option. Use 'help' for usage information."

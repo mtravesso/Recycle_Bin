@@ -262,7 +262,7 @@ An error message is Displayed but the deleting process works anyways
 **Actual Result** Recycle bin is emptied
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/empty_confirmation.png)
 
 ### Test Case 19: Empty Recycle bin without confirmation
 **Objective:** Verify recycle bin has been completely emptied
@@ -275,7 +275,7 @@ To be added
 **Actual Result** Recycle bin is emptied
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/empty_no_confirmation.png)
 
 ### Test Case 20: Permenantly delete a file/directory in the recycle bin with confirmation using id
 **Objective:** Verify that a file/directory has been permanently deleted
@@ -289,9 +289,23 @@ To be added
 **Actual Result** File/Directory is permanently deleted
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/perma_delete_confirm.png)
 
-### Test Case 20: Permenantly delete a file/directory in the recycle bin with confirmation using name
+### Test Case 21: Permenantly delete a file/directory in the recycle bin with confirmation using name
+**Objective:** Verify that a file/directory has been permanently deleted
+**Steps**
+1. To do This step it is first necessary to do any of the previous tests (5-8) for the user to have anything so he is able to empty the recycle bin
+2. Run `./recycle_bin.sh empty name` "name" = the original file/directory name
+3. When asked for user input user must press Y
+**Expected Result**
+- File/Directory is permanently deleted
+- Metadata entrie is removed
+**Actual Result** File/Directory is permanently deleted
+**Status:** Pass
+**Screenshots:**
+![alt text](ScreenShots/perma_delete_confirm_name.png)
+
+### Test Case 22: Permenantly delete a file/directory in the recycle bin without confirmation
 **Objective:** Verify that a file/directory has been permanently deleted
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (5-8) for the user to have anything so he is able to empty the recycle bin
@@ -305,7 +319,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 21: Search for a file/directory by its original name
+### Test Case 23: Search for a file/directory by its original name
 **Objective:** Verify that the search function displays the file/directory being searched on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -317,7 +331,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 22: Search for a file/directory by its original type
+### Test Case 24: Search for a file/directory by its original type
 **Objective:** Verify that the search function displays all the files/directories of the searched type on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -329,7 +343,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 23: Search for a file/directory by its date range
+### Test Case 25: Search for a file/directory by its date range
 **Objective:** Verify that the search function displays all the files/directories of the searched date range on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -341,7 +355,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 24: Display Help information
+### Test Case 26: Display Help information
 **Objective:** Verify that Help information is displayed on the screen
 **Steps**
 1. Run `./recycle_bin.sh help` or `./recycle_bin.sh --help` or `./recycle_bin.sh -h`
@@ -352,7 +366,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 25: Activate Auto-cleanup and empty recycle-bin
+### Test Case 27: Activate Auto-cleanup and empty recycle-bin
 **Objective:** Verify that Help information is displayed on the screen
 **Steps**
 1. To do This step it is first necessary to do any of the previous tests (1-4)
@@ -366,7 +380,7 @@ To be added
 To be added
 **Note:** When in normal usage (RETENTION_DAYS>=0) the auto-cleanup function will delete only the files older than the retention days, not empty the whole recycle bin, unless all the files are older than the retention days
 
-### Test Case 26: Shows Statistics
+### Test Case 28: Shows Statistics
 **Objective:** Verify that Show_Statiscs() function is working as intended
 **Steps**
 1. Run `./recycle_bin.sh stats`
@@ -377,7 +391,7 @@ To be added
 **Screenshots:**
 To be added
 
-### Test Case 27: Preview File
+### Test Case 29: Preview File
 **Objective:** Preview a File
 **Steps**
 1. Run `./recycle_bin.sh preview name` name = the name of the file before deletion 
