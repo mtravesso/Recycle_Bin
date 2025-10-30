@@ -18,6 +18,26 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+#This Functions only serves to check if the metadata file is corrupted or missing, it is used in multiple functions so it's here to avoid code repetition
+check_metadata_file() {
+    local expected_header="ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"
+
+    if [ ! -f "$METADATA_FILE" ]; then
+        echo "Metadata file missing: $METADATA_FILE"
+    elif ! head -n2 "$METADATA_FILE" | grep -Fqx "$expected_header"; then
+        echo "Metadata file corrupted: $METADATA_FILE"
+    else
+        return 0
+    fi
+
+    {
+        echo "# Recycle Bin Metadata"
+        echo "$expected_header"
+    } > "$METADATA_FILE"
+    echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
+    return 1
+}
+
 
 #################################################
 # Function: initialize_recyclebin
@@ -209,16 +229,8 @@ delete_file() {
 # Returns: 0 on success
 #################################################
 list_recycled() {
-    local error_status=0
-    # Validate metadata header and bail out early if invalid
-    local expected_header="ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"
-    if [ ! -f "$METADATA_FILE" ] || ! head -n 2 "$METADATA_FILE" 2>/dev/null | grep -qF "$expected_header"; then
-        echo "Metadata file missing: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "$expected_header" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1    
-    fi
+    #Checks if metadata file is corrupted, if so, recreate it
+    check_metadata_file || return 1
 
     echo "=== Recycle Bin Content ==="
 
@@ -311,14 +323,8 @@ list_recycled() {
 restore_file() {
     local input="$1"
 
-    #Checks if metadata file is corrupted, if so, recreate it
-    if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
-        echo "Metadata file missing or corrupted: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
-    fi
+    #Checks if metadata file is corrupted
+    check_metadata_file || return 1
 
     if [ -z "$input" ]; then
         echo -e "${RED}Error: No file ID or filename specified${NC}"
@@ -529,13 +535,7 @@ restore_file() {
 empty_recyclebin() {
 
     # Checks if metadata file is corrupted, if so, recreate it
-    if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
-        echo "Metadata file missing or corrupted: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
-    fi
+    check_metadata_file || return 1
 
     local auto_confirm="${AUTO_CONFIRM:-false}"
     local noninteractive=false
@@ -652,13 +652,7 @@ empty_recyclebin() {
 search_recycled() {
 
     #Checks if metadata file is corrupted, if so, recreate it
-    if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
-        echo "Metadata file missing or corrupted: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
-    fi
+    check_metadata_file || return 1
 
     # --- Search by date range ---
     if [ "$1" = "date" ]; then
@@ -682,12 +676,12 @@ search_recycled() {
             return 1
         fi
 
-        # Cabeçalho da tabela
+        # Print table header
         printf "%-20s %-20s %-10s %-25s %-10s %-10s %-15s %-40s\n" \
             "ID" "NAME" "TYPE" "DELETION_DATE" "SIZE" "PERMS" "OWNER" "ORIGINAL_PATH"
         printf "%0.s-" {1..160}; echo
 
-        tail -n +3 "$METADATA_FILE" | while IFS=',' read -r id name path date size type perms owner; do
+        while IFS=',' read -r id name path date size type perms owner; do
             file_ts=$(date -d "$date" +%s 2>/dev/null)
             if [ "$file_ts" -ge "$start_ts" ] && [ "$file_ts" -le "$end_ts" ]; then
                 if command -v numfmt >/dev/null 2>&1; then
@@ -700,13 +694,15 @@ search_recycled() {
                     "$id" "$name" "$type" "$date" "$size_h" "$perms" "$owner" "$path"
                 results_found=1
             fi
-        done
+        done < <(tail -n +3 "$METADATA_FILE")
 
         if [ "$results_found" -eq 0 ]; then
             echo "No results found."
         fi
+
         return 0
     fi
+
 
     # --- Search by pattern or type ---
     local pattern="$1"
@@ -724,9 +720,10 @@ search_recycled() {
         "ID" "NAME" "TYPE" "DELETION_DATE" "SIZE" "PERMS" "OWNER" "ORIGINAL_PATH"
     printf "%0.s-" {1..160}; echo
 
-    tail -n +3 "$METADATA_FILE" | while IFS=',' read -r id name path date size type perms owner; do
-        # Pesquisa no nome, path e tipo (extensão)
-        if echo "$name,$path,$type" | grep -Eiq "$pattern"; then
+    
+    while IFS=',' read -r id name path date size type perms owner; do
+        if echo "$name" | grep -Eiq "$pattern" || echo "$path" | grep -Eiq "^${pattern}$" || echo "$type" | grep -Eiq "$pattern"; then
+
             if command -v numfmt >/dev/null 2>&1; then
                 size_h=$(numfmt --to=iec --suffix=B "$size" 2>/dev/null || echo "$size B")
             else
@@ -735,9 +732,10 @@ search_recycled() {
 
             printf "%-20s %-20s %-10s %-25s %-10s %-10s %-15s %-40s\n" \
                 "$id" "$name" "$type" "$date" "$size_h" "$perms" "$owner" "$path"
+
             results_found=1
         fi
-    done
+    done < <(tail -n +3 "$METADATA_FILE")
 
     if [ "$results_found" -eq 0 ]; then
         echo "No results found."
@@ -834,13 +832,7 @@ display_help() {
 #################################################
 show_statistics() {
     #Checks if metadata file is corrupted, if so, recreate it
-    if [ ! -f "$METADATA_FILE" ] || ! head -n2 "$METADATA_FILE" | grep -q "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER"; then
-        echo "Metadata file missing or corrupted: $METADATA_FILE"
-        echo "# Recycle Bin Metadata" > "$METADATA_FILE"
-        echo "ID,ORIGINAL_NAME,ORIGINAL_PATH,DELETION_DATE,FILE_SIZE,FILE_TYPE,PERMISSIONS,OWNER" >> "$METADATA_FILE"
-        echo -e "${YELLOW}Warning: Metadata was recreated.${NC}"
-        return 1
-    fi
+    check_metadata_file || return 1
 
     # Verifica se há itens na recycle bin
     if [ "$(tail -n +3 "$METADATA_FILE" | wc -l)" -eq 0 ]; then

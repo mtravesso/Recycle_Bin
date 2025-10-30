@@ -317,7 +317,7 @@ An error message is Displayed but the deleting process works anyways
 **Actual Result** File/Directory is permanently deleted
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/perma_delete_force.png)
 
 ### Test Case 23: Search for a file/directory by its original name
 **Objective:** Verify that the search function displays the file/directory being searched on the screen
@@ -329,7 +329,7 @@ To be added
 **Actual Result** File/Directory information is displayed on screen
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/search_name.png)
 
 ### Test Case 24: Search for a file/directory by its original type
 **Objective:** Verify that the search function displays all the files/directories of the searched type on the screen
@@ -341,7 +341,7 @@ To be added
 **Actual Result** Files/Directories information are displayed on screen
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/search_type.png)
 
 ### Test Case 25: Search for a file/directory by its date range
 **Objective:** Verify that the search function displays all the files/directories of the searched date range on the screen
@@ -353,7 +353,7 @@ To be added
 **Actual Result** Files/Directories, inside the date range, information are displayed on screen
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/search_date.png)
 
 ### Test Case 26: Display Help information
 **Objective:** Verify that Help information is displayed on the screen
@@ -364,7 +364,7 @@ To be added
 **Actual Result** Help information is displayed on screen
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/help.png)
 
 ### Test Case 27: Activate Auto-cleanup and empty recycle-bin
 **Objective:** Verify that Help information is displayed on the screen
@@ -377,7 +377,7 @@ To be added
 **Actual Result** Auto-cleanup is trigered and the recycle bin is emptied
 **Status:** Pass
 **Screenshots:**
-To be added
+![alt text](ScreenShots/auto_cleanup.png)
 **Note:** When in normal usage (RETENTION_DAYS>=0) the auto-cleanup function will delete only the files older than the retention days, not empty the whole recycle bin, unless all the files are older than the retention days
 
 ### Test Case 28: Shows Statistics

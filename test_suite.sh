@@ -46,7 +46,8 @@ assert_fail() {
 create_large_file() {
     local path="$1"
     local size_mb="$2"
-    dd if=/dev/zero of="$path" bs=1M count="$size_mb" &>/dev/null
+    fallocate -l "${size_mb}M" "$path" 2>/dev/null || \
+        truncate -s "${size_mb}M" "$path"
 }
 
 # ============================
