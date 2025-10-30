@@ -78,9 +78,8 @@ Default settings are hardcoded in the script:
 
 
 ## Known Issues
-File metadata (like deletion date) is limited; 
+When restoring a corrupted metadata file, the script may continue  
 No versioning or backup history.
-If the metadata file grows too large, search and sorting operations may slow down significantly.
 
 
 ## References
