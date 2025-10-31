@@ -364,3 +364,11 @@ Allows users to preview a deleted file before restoration.
 
 ## 7.Flowcharts for complex operations
 
+### Delete File Flowchart
+![alt text](ScreenShots/Diagrams/FlowChart_Delete.jpg)
+
+### Restore File Flowchart
+![alt text](ScreenShots/Diagrams/FlowChart_Restore.jpg)
+
+### Empty Recycle Bin Flowchart
+![alt text](ScreenShots/Diagrams/FlowChart_Empty.jpg)
