@@ -155,3 +155,212 @@ The metadata.db file is a CSV database used by the recycle bin to keep track of 
     By running the help command, users can view a clear description of available operations, their expected arguments, and examples of usage. 
     This functionality ensures that even users unfamiliar with the script or command-line interfaces can understand and use the recycle bin effectively.
 
+## 6. Algorithm explanations
+
+### 1. delete_file()
+
+#### Purpose:
+Moves a file or directory to the recycle bin while saving its metadata for potential restoration.
+
+#### Algorithm Steps:
+
+1. Input validation:
+    -Check if the user provided a valid file path as an argument.
+    -If not, display an error and exit.
+
+2. Check file existence:
+    -Verify that the target file exists in the filesystem.
+
+3. Generate unique ID:
+    -Create a unique identifier (usually with uuidgen or timestamp) to avoid name conflicts in the recycle bin.
+
+4. Move the file:
+    -Use mv to transfer the file to the $RECYCLED_DIR.
+
+5. Collect metadata:
+    -Gather file attributes:
+        -Path before deletion
+        -Deletion date (date)
+        -File size (stat -c %s)
+        -Type (file/directory)
+        -Permissions (stat -c %A)
+        -Owner (stat -c %U)
+
+6. Store metadata:
+    -Append a new line to the metadata CSV file with all the details.
+
+7. Confirmation message:
+    -Display success information with file name and ID.
+    
+
+### 2. restore_file()
+
+#### Purpose:
+Restores a previously deleted file from the recycle bin back to its original location.
+
+#### Algorithm Steps:
+
+1. Receive file ID:
+    -User passes the ID corresponding to the deleted file.
+
+2. Lookup in metadata file:
+    -Search for the matching line using grep or awk.
+
+3. Extract original path:
+    -Read the path column from the matched metadata entry.
+
+4. Move the file back:
+    -Use mv to restore it from $RECYCLED_DIR to its original path.
+
+5. Remove metadata entry:
+    -Delete the corresponding line from the metadata CSV file.
+
+6. Display confirmation:
+    -Inform the user that the file was successfully restored
+    
+
+### 3.empty_recycle_bin()
+
+#### Purpose:
+Completely removes all files and clears the metadata file.
+
+#### Algorithm Steps:
+
+1. Confirm action:
+    -Ask the user for confirmation (yes/no).
+
+2. Delete files:
+    -Use rm -rf "$RECYCLED_DIR"/* to permanently remove all files.
+
+3. Reset metadata:
+    -Rewrite the metadata file header.
+
+4. Output:
+    -Print confirmation message.
+    
+    
+### 4. list_recycled()
+
+#### Purpose:
+Displays the content of the recycle bin in a formatted, sortable table.
+
+#### Algorithm Steps:
+
+1. Read metadata file:
+    -Skip the first two header lines.
+
+2. Choose sorting field:
+    -Determine sorting based on user argument (--sort name/date/size).
+
+3. Sort entries:
+    -Use sort -t',' -kX to order based on the chosen column.
+
+4. Print header:
+    -Display column names for readability.
+
+5. Iterate over entries:
+    -Use a while read loop to print each entry in formatted columns.
+    
+
+### 5. show_statistics()
+
+#### Purpose:
+Provides a summary of the recycle bin contents.
+
+####Algorithm Steps:
+
+1. Count entries:
+    -Count total items excluding metadata headers.
+
+2. Calculate total size:
+    -Use awk to sum all size fields.
+
+3. Classify by type:
+    -Separate counts for files vs directories.
+
+4. Find oldest/newest items:
+    -Sort by date and extract the first and last records.
+
+5. Calculate averages:
+    -Compute mean file size.
+
+6. Display summary:
+    -Print all statistics in readable format.
+    
+
+### 6. auto_cleanup()
+
+#### Purpose:
+Automatically deletes files older than a configured number of days (e.g., 30 days).
+
+#### Algorithm Steps:
+
+1. Read RETENTION_DAYS from config file.
+    -Default = 30 if not defined.
+
+2. Get current time:
+    -Use date +%s to get current epoch seconds.
+
+3. Loop through metadata entries:
+    -For each file, extract the deletion date.
+
+4. Convert to epoch:
+    -Use date -d "$date" +%s.
+
+5. Compute difference:
+    -(current_time - deletion_time) / 86400 gives the number of days.
+
+6. Compare:
+    -If difference > RETENTION_DAYS, permanently remove the file.
+
+7. Log summary:
+    -Display how many files were cleaned.
+    
+
+### 7. check_quota()
+
+#### Purpose:
+Ensures the recycle bin doesn’t exceed the maximum allowed size (e.g., 1GB).
+
+#### Algorithm Steps:
+
+1. Define max quota (MB):
+    -Read from config file or set default MAX_SIZE_MB=1024.
+
+2. Convert to bytes:
+    -MAX_SIZE_BYTES=$((MAX_SIZE_MB * 1024 * 1024)).
+
+3. Calculate current usage:
+    -du -cb "$FILES_DIR"/* | tail -n1 | awk '{print $1}'.
+
+4. Compare:
+    -If current size > quota → print warning.
+
+5. Trigger cleanup:
+    -Optionally call auto_cleanup.
+
+
+### 8. preview_file()
+
+#### Purpose:
+Allows users to preview a deleted file before restoration.
+
+#### Algorithm Steps:
+
+1. Receive file ID.
+
+2. Locate file in metadata file.
+
+3. Check file type:
+    Use file command.
+
+4. If text file:
+    Display first 10 lines using head -n 10.
+
+5. If binary file:
+    -Display message: “Binary file detected — type info: [type]”.
+
+6. End.
+
+## 7.Flowcharts for complex operations
+
