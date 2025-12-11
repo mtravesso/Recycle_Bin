@@ -92,7 +92,7 @@ test_delete_empty_dir() {
 
 test_delete_dir_with_contents() {
     echo "=== Test: Delete Directory with Contents ==="
-    setup
+    setup 
     mkdir -p "$TEST_DIR/dir_with_files"
     echo "x" > "$TEST_DIR/dir_with_files/filea.txt"
     echo "y" > "$TEST_DIR/dir_with_files/fileb.txt"
