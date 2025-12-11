@@ -991,7 +991,7 @@ check_quota() {
 preview_file() {
     local input="$1"
     local metadata recycle_path id name original_path type display_label mime
-
+ 
     # trim whitespace
     input=$(printf '%s' "$input" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
