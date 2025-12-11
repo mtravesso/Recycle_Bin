@@ -66,7 +66,7 @@ Default settings are hardcoded in the script:
 
 ./recycle_bin.sh search doc
 ![alt text](ScreenShots/search.png)
-
+ 
 ./recycle_bin.sh preview doc2.txt
 ![alt text](ScreenShots/preview.png)
 
@@ -85,7 +85,7 @@ No versioning or backup history.
 ## References
 Files that the Professor made available on elearning
 Videos from youtube and some sites:
-    -https://www.youtube.com/watch?v=2733cRPudvI&list=PLT98CRl2KxKGj-VKtApD8-zCqSaN2mD4w (and others from the same youtube channel)
+    -https://www.youtube.com/watch?v=2733cRPudvI&list=PLT98CRl2KxKGj-VKtApD8-zCqSaN2mD4w (and others videos from the same youtube channel)
     -https://www.geeksforgeeks.org/du-command-in-linux-with-examples/
     -https://www.geeksforgeeks.org/linux-unix/stat-command-in-linux-with-examples/
     -https://labex.io/linuxjourney
