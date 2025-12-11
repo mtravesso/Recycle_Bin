@@ -984,7 +984,7 @@ check_quota() {
 #################################################
 # Function: preview_file
 # Description: Displays the first 10 lines of a text file or shows file type information if it is a binary file.
-# Arguments: 
+# Arguments:
 #   $1 - File ID (identifier of the file to preview)
 # Returns: Displays preview or file type info on screen.
 #################################################
