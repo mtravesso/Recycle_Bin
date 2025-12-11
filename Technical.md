@@ -148,7 +148,7 @@ The metadata.db file is a CSV database used by the recycle bin to keep track of 
     The show statistics function provides detailed information about the recycle bin itself, not just the files it contains, giving users 
     insights into usage patterns.
     The file preview functionality allows users to view a limited number of lines from a deleted file, making it easier to identify 
-    files before restoring or permanently deleting them.
+    files before restoring or permanently deleting them. 
 
 ### Help Function:
     The script includes a comprehensive help function that guides users through its features and usage. 
@@ -364,11 +364,3 @@ Allows users to preview a deleted file before restoration.
 
 ## 7.Flowcharts for complex operations
 
-### Delete File Flowchart
-![alt text](ScreenShots/Diagrams/FlowChart_Delete.jpg)
-
-### Restore File Flowchart
-![alt text](ScreenShots/Diagrams/FlowChart_Restore.jpg)
-
-### Empty Recycle Bin Flowchart
-![alt text](ScreenShots/Diagrams/FlowChart_Empty.jpg)
