@@ -152,7 +152,7 @@ The metadata.db file is a CSV database used by the recycle bin to keep track of 
 
 ### Help Function:
     The script includes a comprehensive help function that guides users through its features and usage. 
-    By running the help command, users can view a clear description of available operations, their expected arguments, and examples of usage. 
+    By running the help command, users can view a clear description of available operations, their expected arguments, and examples of usage.
     This functionality ensures that even users unfamiliar with the script or command-line interfaces can understand and use the recycle bin effectively.
 
 ## 6. Algorithm explanations
